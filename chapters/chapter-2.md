@@ -1,14 +1,14 @@
 # Mastering Directives in Vue.js
 
+[[toc]]
+
 In this chapter, we will delve into directives in Vue.js, a key element
 for mastering this front-end library. Directives allow us to add new
 functionalities to HTML elements on the page.
 
-We will explore several essential directives, such as `v-bind`, `v-if`,
-`v-else`, `v-show`, and `v-for`, providing detailed steps to understand how they function.
+We will explore several essential directives, such as `v-bind`, `v-if`, `v-else`, `v-show`, and `v-for`, providing detailed steps to understand how they function.
 
-Next, we will focus on the `v-model` directive, which is particularly
-useful for two-way data binding in forms.
+Next, we will focus on the `v-model` directive, which is particularly useful for two-way data binding in forms.
 
 Finally, we will address the use of modifiers in Vue.js, which allow us to modify the behavior of directives.
 
@@ -17,8 +17,7 @@ Finally, we will address the use of modifiers in Vue.js, which allow us to modif
 A component is similar to an HTML element and can have attributes (also
 called props, meaning properties).
 
-Let’s use two new attributes, named `init` and `end`, in the `MyCounter`
-component:
+Let’s use two new attributes, named `init` and `end`, in the `MyCounter` component:
 
 - The `init` attribute indicates the initialization value of
 the counter. If this attribute is not specified, its starting
@@ -30,41 +29,42 @@ does not stop.
 As long as the counter value (incremented every second) is between
 the `init` and `end` values, the counter continues to increment. Once the end value is reached (if specified in the attributes), the counter stops.
 
-## Step 1: Using the init and end Attributes in the MyCounter Component
+### Step 1: Using the init and end Attributes in the MyCounter Component
 
 An example of using the `MyCounter` component with the `init` and `end`
 attributes could be the following:
 
-```vue
-// Counter from 10 to 20
+**Counter from 10 to 20**
 
+```vue
 <MyCounter init="10" end="20" /> 
 ```
 
 In this case, the numeric values 10 and 20 are passed to the `MyCounter`
 component. To indicate a counter that starts at 10 but never stops, the end attribute is omitted in the `MyCounter` component’s definition:
 
-```vue
-// Counter from 10 to infinity
+**Counter from 10 to infinity**
 
+```vue
 <MyCounter init=10 />
 ```
 
 Finally, to indicate a counter that counts from 0 to infinity, no
 attributes are specified in the `MyCounter` component:
 
-```vue
-// Counter from 0 to infinity
 
+**Counter from 0 to infinity**
+
+```vue
 <MyCounter />
 ```
 
 It is also possible to set the value of an attribute based on the value of
 a variable initialized in the program. For example, if we define the variable `init` initialized to the value `10`:
 
-```vue
-// Counter initialized from the init variable (file src/App.vue)
+**Counter initialized from the init variable (file src/App.vue)**
 
+```vue
 <script setup>
 import MyCounter from './components/MyCounter.vue'
 const init = 10;  // The variable init is equal to 10
@@ -75,7 +75,7 @@ const init = 10;  // The variable init is equal to 10
 </template>
 ```
 
-The init variable is defined in the `<script>` section of the component.
+The `init` variable is defined in the `<script>` section of the component.
 It is accessible in the `<template>` section of the component by writing
 `:init="init"`. The syntax `:init="init"` signifies that the `init` attribute (indicated as `:init`) is initialized with the value of the init variable (indicated as "init").
 
@@ -90,19 +90,19 @@ if the JavaScript expression contains spaces. Thus, writing ="init" or
 To initialize the counter with the numeric value 10, one can also write
 the following:
 
-```
-// Initialize the init attribute to the numeric value 10
+**Initialize the init attribute to the numeric value 10**
 
+```
 <MyCounter :init="10" />
 ```
 
-Indeed, specifying :init instead of just init for the attribute name
+Indeed, specifying `:init` instead of just `init` for the attribute `name`
 indicates that the following value is a JavaScript expression, specifically the numeric value 10 and not the string “10”.
 
 We have seen how to write and use the `MyCounter` component in
 various forms with the `init` and end attributes. Let’s now explore how the MyCounter component is written to make use of these attributes.
 
-## Step 2: Writing the MyCounter Component That Utilizes the init and end Attributes
+### Step 2: Writing the MyCounter Component That Utilizes the init and end Attributes
 
 The code associated with the MyCounter component must consider the
 various possible forms for writing the attributes.
@@ -110,8 +110,47 @@ various possible forms for writing the attributes.
 The attributes will be defined in the `<script setup>` section of the
 component, using Vue.js’s `defineProps()` method.
 
-MyCounter component with init and end attributes (file src/
-components/MyCounter.vue)
+**MyCounter component with init and end attributes (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed, onMounted, onUnmounted, defineProps }
+from 'vue';
+let timer;
+const props = defineProps(["init", "end"]);  
+// Declaration of the "init" and "end" attributes
+const init = props.init || 0;    // 0: default value
+const end = props.end || 0;  // 0: default value
+const count = ref(parseInt(init));
+const doubleCount = computed(() => count.value * 2);
+const increment = () => {
+  if (!end || count.value < parseInt(end)) count.value++;
+  else stop();
+};
+const start = () => {
+  timer = setInterval(() => {
+    increment();
+  }, 1000);
+};
+const stop = () => {
+  clearInterval(timer);
+};
+onMounted(() => {
+  start();
+});
+onUnmounted(() => {
+  stop();
+});
+</script>
+<template>
+  <h3>MyCounter Component</h3>
+  init : {{init}} => end : {{end}}
+  <br /><br />
+  Reactive variable count : <b>{{ count }}</b>
+  <br />
+   Computed variable doubleCount : <b>{{ doubleCount }}</b>
+</template>
+```
 
 The `defineProps()` method is used by specifying, in an array, the
 name of each attribute.
@@ -127,7 +166,17 @@ The values of the attributes, retrieved into the variables `init` and `end`,
 are then displayed in the template using `{{init}}` and `{{end}}`.
 For example, suppose the `MyCounter` component is used as follows:
 
-Counter from 10 to 20 (file src/App.vue)
+**Counter from 10 to 20 (file src/App.vue)**
+
+```vue
+<script setup>
+import MyCounter from "./components/MyCounter.vue"
+</script>
+
+<template>
+<MyCounter init=10 end=20 />
+</template>
+```
 
 The counter starts at the value `10` and ends at the value `20`. Let’s run
 the program:
@@ -149,23 +198,69 @@ component.
 The App component, which uses the `MyCounter` component, is
 modified as follows:
 
-App component using the MyCounter component and its limits
-attribute (file src/App.vue)
+**App component using the MyCounter component and its limits attribute (file src/App.vue)**
 
-The value of the `limits` attribute is specified as an object `{init: 10,
-end: 20}`. Adding a string around the object is optional if the following
+```vue
+<script setup>
+import MyCounter from "./components/MyCounter.vue"
+</script>
+
+<template>
+<MyCounter :limits="{init:10, end:20}" />
+</template>
+```
+
+The value of the `limits` attribute is specified as an object `{init: 10,end: 20}`. Adding a string around the object is optional if the following
 value does not contain spaces (here, the string is required because there is
 a space before the end attribute).
 
 To ensure that Vue.js interprets the specified value as a JavaScript value
-(here, an object), it must be indicated by writing the attribute as `:limits`
-rather than just `limits`.
+(here, an object), it must be indicated by writing the attribute as `:limits` rather than just `limits`.
 
 Let’s see how the code of the `MyCounter` component is modified to
 accommodate the new `limits` attribute.
 
-MyCounter component using the limits attribute (file src/components/
-MyCounter.vue)
+**MyCounter component using the limits attribute (file src/components/
+MyCounter.vue)**
+
+```
+<script setup>
+import { ref, computed, onMounted, onUnmounted, defineProps }
+from 'vue';
+let timer;
+const props = defineProps(["limits"]);
+const init = props.limits.init || 0;
+const end = props.limits.end || 0;
+const count = ref(parseInt(init));
+const doubleCount = computed(() => count.value * 2);
+const increment = () => {
+  if (!end || count.value < parseInt(end)) count.value++;
+  else stop();
+};
+const start = () => {
+  timer = setInterval(() => {
+    increment();
+  }, 1000);
+};
+const stop = () => {
+  clearInterval(timer);
+};
+onMounted(() => {
+  start();
+});
+onUnmounted(() => {
+  stop();
+});
+</script>
+<template>
+  <h3>MyCounter Component</h3>
+  init : {{init}} => end : {{end}}
+  <br /><br />
+  Reactive variable count : <b>{{ count }}</b>
+  <br />
+  Computed variable doubleCount : <b>{{ doubleCount }}</b>
+</template>
+```
 
 The limits attribute is defined in the `defineProps()` method as
 `["limits"]`. The `init` value is retrieved from `props.limits.init`, and
@@ -201,26 +296,56 @@ Let’s start with the `v-bind` directive.
 
 ## v-bind Directive
 
-The v-bind directive allows using attribute values that will be reactive,
+The `v-bind` directive allows using attribute values that will be reactive,
 similar to reactive variables used in HTML.
 
 For example, let’s use the previous counter, where the value
 increments upon clicking the “count+1” button. Suppose we want to
-display the counter value in an input field. For this, we would like to write
-something like `<input type="text" value="{{count}}" />`. Indeed, it is
-hoped that, thanks to the reactivity of the count variable, the value of the
-input field will be updated when the counter is incremented.
+display the counter value in an input field. For this, we would like to write something like `<input type="text" value="{{count}}" />`. Indeed, it is hoped that, thanks to the reactivity of the count variable, the value of the input field will be updated when the counter is incremented.
 
 Let’s write this in the template of the `MyCounter` component. The
 `MyCounter` component becomes as follows:
 
-Display the count variable in the value attribute of an input field (file
-src/components/MyCounter.vue)
+**Display the count variable in the value attribute of an input field (file
+src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed } from "vue"
+const count = ref(0);
+const doubleCount = computed(() => count.value * 2);
+const increment = () => {
+  count.value++;
+};
+</script>
+
+<template>
+  <h3>MyCounter Component</h3>
+  Reactive variable count : <b>{{ count }}</b>
+  <br />
+  Computed variable doubleCount : <b>{{ doubleCount }}</b>
+  <br/>
+  Input : 
+  <input type="text" value="{{count}}" /> // [!code highlight]
+  <br/><br/>
+  <button @click="increment()">count+1</button>
+</template>
+```
 
 The `App` component that displays the `MyCounter` component is as
 follows:
 
-App component (file src/App.vue)
+**App component (file src/App.vue)**
+
+```vue{6}
+<script setup>
+import MyCounter from "./components/MyCounter.vue"
+</script>
+
+<template>
+<MyCounter />
+</template>
+```
 
 After several clicks on the “count+1” button, the displayed result is as
 follows:
@@ -235,7 +360,7 @@ Therefore, one would write `<input type="text" v-bind:value="count" />`, which b
 
 The template of the MyCounter component becomes the following:
 
-Display the count variable in the value attribute of an input field (file src/components/MyCounter.vue)
+**Display the count variable in the value attribute of an input field (file src/components/MyCounter.vue)**
 
 Now, we obtain correct initialization and updates of the input field based on the changes in the reactive variable `count`.
 
@@ -255,25 +380,53 @@ One could also write `v-bind:value="count+3"` because the value `"count+3"` is a
 
 Additionally, one can write the shorthand form `:value="count+3"`, which is equivalent to `v-bind:value="count+3"`.
 
-## Refreshing a Component by Modifying Its Attributes
+### Refreshing a Component by Modifying Its Attributes
 
 The following example demonstrates how to update a component by transmitting new values to its attributes.
 
-In this scenario, we want the “count+1” button to be integrated into the `App` component rather than the `MyCounter` component. This means that the `App` component should handle the incrementation of the counter and transmit this counter value to the `MyCounter` component
-through attributes. With each increment of the counter value in the `App` component, the `MyCounter` component refreshes to display the new value.
+In this scenario, we want the “count+1” button to be integrated into the `App` component rather than the `MyCounter` component. This means that the `App` component should handle the incrementation of the counter and transmit this counter value to the `MyCounter` component through attributes. With each increment of the counter value in the `App` component, the `MyCounter` component refreshes to display the new value.
 
 The App component becomes as follows:
-App component (file src/App.vue)
+
+**App component (file src/App.vue)**
+
+```ts-vue
+<script setup>
+import MyCounter from "./components/MyCounter.vue"
+</script>
+
+<template>
+<MyCounter />
+</template>
+```
 
 The logic for incrementing the counter is implemented in the `App` component. The counter values (`count` and `doubleCount`) are transmitted in the attributes of the `MyCounter` component, which then displays them.
 
 The `MyCounter` component is refreshed each time one of its attributes is modified.
 
-## Step 1: Using Attributes in the `<template>` Section of the MyCounter Component
+### Step 1: Using Attributes in the `<template>` Section of the MyCounter Component
 
 The `MyCounter` component, which utilizes the transmitted attributes, becomes as follows:
 
-MyCounter component (file src/components/MyCounter.vue)
+**MyCounter component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { defineProps } from "vue";
+
+// Enabling access to the attributes count and doubleCount in the template
+defineProps(["count", "doubleCount"]);
+</script>
+
+<template>
+  <h3>MyCounter Component</h3>
+  Reactive variable count : <b>{{ count }}</b>
+  <br />
+  Computed variable doubleCount : <b>{{ doubleCount }}</b>
+  <br/>
+  Input : <input type="text" v-bind:value="count" />
+</template>
+```
 
 The `defineProps(["count", "doubleCount"])` method identifies the attributes `count` and `doubleCount`, which will then be directly used by their names in the `<template>` section.
 
@@ -281,14 +434,14 @@ Note that the `props` variable typically returned by `defineProps()` is unnecess
 
 Let’s verify that everything is working:
 
-## Step 2: Using Attributes in th `<script setup>` Section of the MyCounter Component
+### Step 2: Using Attributes in th `<script setup>` Section of the MyCounter Component
 
 If you want to use the transmitted `count` and `doubleCount` attributes in the `<script setup>` section of the `MyCounter` component, you need to access them directly using the `props` variable, in the form of `props.count` and `props.doubleCount`. The variables `count` and `doubleCount`, corresponding to the attributes, can only be used under these names in the `<template>` section.
 
 Let’s use `props.count` in the `<script setup>` section. As this value is updated with each increment, we display its value in the `onUpdated()` lifecycle method.
 
-Using props.count in `<script setup>` (file src/components/
-MyCounter.vue)
+Using `props.count` in `<script setup>` (file src/components/MyCounter.vue)
+
 
 We display the value of `props.count` in the `<script setup>` section of the component (creation) and then with each update in the `onUpdated()` method.
 
@@ -308,15 +461,16 @@ The `v-if` and `v-else` directives will allow us to alternately display the Star
 If the `v-else` directive is used, it must follow an element with a `v-if` directive.
 
 In the following, the App component is restored to its initial state:
-App component (file src/App.vue)
+
+**App component (file src/App.vue)**
 
 Let’s now write the `MyCounter` component, which alternately displays the Start and Stop buttons. We will first code it in an intuitive way, but it won’t work. Then, we’ll see the modifications needed to achieve the desired result.
 
-## Step 1: Writing the MyCounter Component in an Intuitive (but Nonfunctional…) Way
+### Step 1: Writing the MyCounter Component in an Intuitive (but Nonfunctional) Way
 
 Based on what we have previously explained, it would be natural to code the `MyCounter` component as follows:
 
-MyCounter component with alternated Start and Stop buttons (file src/components/MyCounter.vue)
+**MyCounter component with alternated Start and Stop buttons (file src components/MyCounter.vue)**
 
 The interesting part is the one written with the `v-if` and `v-else` directives:
 
@@ -337,7 +491,7 @@ Clicking the Stop button has stopped the counter. However, the button label is s
 
 So there is an issue. Let’s explain why and resolve it now.
 
-## Step 2: Writing the MyCounter Component After Corrections (And Functional!)
+### Step 2: Writing the MyCounter Component After Corrections (And Functional!)
 
 The frequently made mistake is using a nonreactive variable in a directive, as seen with the `timer` variable, which is not reactive but is used in the `v-if` directive. Since the `timer` variable is not reactive, its modification is not considered by the `v-if` directive, which observes changes only on reactive variables.
 
@@ -372,7 +526,7 @@ The value of the `v-for` directive can be written in several ways, depending on 
 
 Let’s start by studying the writing form `v-for="i in n"`, which allows for a loop from `1` to the value `n`.
 
-## Step 1: v-for Directive in the Form v-for=“i in n”
+### Step 1: v-for Directive in the Form v-for=“i in n”
 
 The variable `i` corresponds to the index in the loop (starting from `1`), while the variable `n` corresponds to the final value of the index in the loop.
 
@@ -380,7 +534,7 @@ To use this form of the `v-for` directive, suppose we want to display multiple c
 
 The App component is modified to display the `MyCounters` component:
 
-App component displaying the MyCounters component (file src/App.vue)
+**App component displaying the MyCounters component (file src/App.vue)**
 
 Notice that if we specify `:nb="3"` instead of `nb="3"`, it allows us to transmit the numeric value `3` to the `MyCounters` component rather than the string “3”. Indeed, if an attribute is preceded by the `“:”` sign, it means that we should interpret the following value (in quotes or not) as a JavaScript expression.
 
@@ -401,7 +555,7 @@ We encounter two errors:
 
 These errors are quite common when starting to develop Vue.js applications. We explain how to resolve these errors in the following section. It is sufficient to use an attribute named `key` in the `v-for` directive.
 
-## Step 2: Use the Key Attribute with the v-for Directive
+### Step 2: Use the Key Attribute with the v-for Directive
 
 The previous error shows that the use of the `v-for` directive must be accompanied by the use of the `v-bind:key` directive. This `v-bind:key` directive allows defining a special attribute reserved for Vue.js (`key` attribute) that provides a unique key to each repetitively inserted element.
 
@@ -432,7 +586,7 @@ example).
 
 To build dynamic lists, it is generally recommended to use a unique ID identifier associated with each list item.
 
-## Step 4: Use an Index in the Component That Uses v-for
+### Step 4: Use an Index in the Component That Uses v-for
 
 Suppose we want to number the previous counters, here from 1 to 3. The `key` attribute contains this value from `1` to `3` but cannot be used directly in the component because it is prohibited by Vue.js and produces an error. The `key` attribute is indeed for internal use by Vue.js.
 
@@ -458,7 +612,7 @@ The counters are now numbered starting from 1. Of course, each counter starts an
 We have previously seen how to use the `v-for` directive in the form `v-for="i in n"`, which allows looping from `1` to `n`. Now, let’s explore how to loop through an array of elements using another form of the `v-for`
 directive, namely, `v-for="(item, i) in items"`.
 
-## Step 5: v-for Directive in the Form v-for=“(item, i) in items”
+### Step 5: v-for Directive in the Form v-for=“(item, i) in items”
 
 The second form of the `v-for` directive enables looping through an array of elements represented by the variable `items`. Each element in the array is represented by the variable `item`. The variable `i` corresponds to the index
 of the element in the array, starting from `0` (unlike the previous form of the directive where it started from `1`).
@@ -470,7 +624,7 @@ to as `limits`:
 
 The App component is as follows:
 
-App component (file src/App.vue)
+**App component (file src/App.vue)**
 
 The `limits` array is an array of objects `{ init, end }`, indicating for each counter its initial value (`init`) and final value (`end`):
 
@@ -505,7 +659,7 @@ Conversely, modifying the `value` attribute of the input field does not update t
 
 The `v-model` directive enables two-way binding (attribute to variable and variable to attribute), while the `v-bind` directive allows modification in only one direction (variable to attribute).
 
-## Step 1: Difference Between v-bind and v-model Directives
+### Step 1: Difference Between v-bind and v-model Directives
 
 To observe the behavioral difference between the `v-bind` and `v-model` directives, let’s use the `MyCounter` component, which displays the reactive variable `count` and two input fields:
 
@@ -514,15 +668,45 @@ To observe the behavioral difference between the `v-bind` and `v-model` directiv
 
 The `MyCounter` component is directly inserted into the `App` component:
 
-App component (file src/App.vue)
+**App component (file src/App.vue)**
+
+```vue
+<script setup>
+import MyCounter from './components/MyCounter.vue'
+</script>
+
+<template>
+<MyCounter />
+</template>
+```
 
 The `MyCounter` component becomes the following:
 
-MyCounter component (file src/components/MyCounter.vue)
+**MyCounter component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed } from "vue"
+const count = ref(0);
+const doubleCount = computed(() => count.value * 2);
+</script>
+
+<template>
+  <h3> MyCounter Component </h3>
+  Reactive variable count : <b>{{ count }}</b>
+  <br />
+  Computed variable doubleCount : <b>{{ doubleCount }}</b>
+  <br /><br />
+   Input for count (using v-bind): <input type="text"
+:value="count" />
+   <br/><br/>
+   Input for count (using v-model): <input type="text"
+v-model="count" />
+</template>
+```
 
 Indeed, to use the `v-bind` directive, you can simplify the syntax by writing `:value="count"` instead of `v-bind:value="count"`. During program execution, the value of the reactive variable (here, `0`) initializes
-the content of both input fields. This is achieved through the functionality of the `v-bind` directive, and it’s worth noting that the `v-model` directive also
-incorporates the behavior of `v-bind`.
+the content of both input fields. This is achieved through the functionality of the `v-bind` directive, and it’s worth noting that the `v-model` directive also incorporates the behavior of `v-bind`.
 
 The distinction between the `v-bind` and `v-model` directives becomes apparent when modifying the values in the input fields. If you modify the first input field using the `v-bind` directive, the reactive variable `count` does not get updated:
 
@@ -531,7 +715,7 @@ associated reactive variable `count`.
 
 On the other hand, if you modify the second input field using the `v-model` directive, the reactive variable `count` updates (thanks to `v-model`), leading to the modification of the first input field using `v-bind` (due to the behavior of the `v-bind` directive).
 
-## Step 2: Using the v-model Directive in Forms
+### Step 2: Using the v-model Directive in Forms
 
 We have seen the usefulness of the `v-model` directive in managing an input field, automatically capturing the content of the input field in a reactive variable.
 
@@ -552,40 +736,221 @@ selection list, radio buttons, or check boxes).
 
 A new component called `MyForm` is used, which will contain the previous display. The component file `MyForm.vue` is created in the `src/components` directory. The `MyForm` component is inserted into the `App` component:
 
-App component using the MyForm component (file src/App.vue)
+**App component using the MyForm component (file src/App.vue)**
 
-## Step 3: Managing Input Fields with v-model
+```vue
+<script setup>
+import MyForm from "./components/MyForm.vue"
+</script>
+
+<template>
+<MyForm />
+</template>
+```
+
+### Step 3: Managing Input Fields with `v-model`
 
 This case is the one we previously studied, which served as an introduction to the `v-model` directive. The `MyForm` component becomes the following:
 
-Input field in the MyForm component (file src/components/
-MyForm.vue)
+**Input field in the MyForm component (file src/components/MyForm.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const name = ref("");
+</script>
+
+<template>
+<h3>Input Form</h3>
+Name: <input type="text" v-model="name" />
+<br/><br/>
+<h3>Reactive Variables</h3>
+name: <b>{{name}}</b>
+<br/><br/>
+</template>
+
+<style scoped>
+h3 {
+  background-color: gainsboro;
+  padding: 5px;
+}
+</style>
+```
 
 After entering data into the field, you get:
 
-## Step 4: Managing Selection Lists with v-model
+### Step 4: Managing Selection Lists with `v-model`
 
 Now, let’s see how to retrieve the selected value in a list, for example, the year of birth.
 
-Selection list in the MyForm component (file src/components/MyForm.vue)
+**Selection list in the `MyForm` component (file src/components/MyForm.vue)**
 
-The v-model directive is used on the `<select>` element. Each year in the list is displayed using a `v-for` directive, iterating over `"date in dates"`. The dates array has been previously populated in the `<script setup>` section of the component. If a date is chosen from the list, the selected date is displayed in the reactive variable `birthdate`:
+```
+<script setup>
+import { ref } from "vue"
+const name = ref("");
+let dates = [];
+for (let year=2023; year > 1900; year--) dates.push(year);
+const birthdate = ref("");
+</script>
 
-## Step 5: Managing Radio Buttons with v-model
+<template>
+<h3>Input Form</h3>
+Name: <input type="text" v-model="name" />
+<br/><br/>
+Date of Birth:
+  <select v-model="birthdate" >
+     <option v-for="date in dates" :value="date"
+:key="date">{{date}}</option>
+  </select>
+<br/><br/>
+<h3>Reactive Variables</h3>
+name: <b>{{name}}</b>
+<br/><br/>
+birthdate: <b>{{birthdate}}</b>
+<br/><br/>
+</template>
+
+<style scoped>
+h3 {
+  background-color: gainsboro;
+  padding: 5px;
+}
+</style>
+```
+
+The `v-model` directive is used on the `<select>` element. Each year in the list is displayed using a `v-for` directive, iterating over `"date in dates"`. The dates array has been previously populated in the `<script setup>` section of the component. If a date is chosen from the list, the selected date is displayed in the reactive variable `birthdate`:
+
+### Step 5: Managing Radio Buttons with v-model
 
 Now, let’s see how to retrieve the value of the selected radio button. Here, radio buttons are used to choose marital status: Married, Single, Divorced, Widowed. Only one radio button at a time is selected in the list.
 
-Managing radio buttons in the form (file src/components/
-MyForm.vue)
+**Managing radio buttons in the form (file src/components/MyForm.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const name = ref("");
+let dates = [];
+for (let year=2023; year > 1900; year--) dates.push(year);
+const birthdate = ref("");
+const maritalStatus = ref("");
+</script>
+
+<template>
+<h3>Input Form</h3>
+Name: <input type="text" v-model="name" />
+<br/><br/>
+Date of Birth:
+  <select v-model="birthdate" >
+     <option v-for="date in dates" :value="date" :key="date">
+{{date}}</option>
+  </select>
+<br/><br/>
+Marital Status:
+  <input type="radio" value="M" id="maried"
+v-model="maritalStatus">
+   <label for="maried">Married</label>
+   <input type="radio" value="S" id="single"
+v-model="maritalStatus">
+   <label for="single">Single</label>
+   <input type="radio" value="D" id="divorced"
+v-model="maritalStatus">
+  <label for="divorced">Divorced</label>
+   <input type="radio" value="W" id="widower"
+v-model="maritalStatus">
+  <label for="widower">Widowed</label>
+  <br/><br/>
+  <h3>Reactive Variables</h3>
+  name: <b>{{name}}</b>
+  <br/><br/>
+  birthdate: <b>{{birthdate}}</b>
+  <br/><br/>
+  maritalStatus: <b>{{maritalStatus}}</b>
+  <br/><br/>
+</template>
+
+<style scoped>
+h3 {
+  background-color: gainsboro;
+  padding: 5px;
+}
+</style>
+```
 
 The `v-model` directive is applied to each `<input type="radio">` element. The same reactive variable, `maritalStatus`, is associated with each element.
 
-## Step 6: Managing Check Boxes with v-model
+### Step 6: Managing Check Boxes with v-model
 
 Finally, let’s see how to handle check boxes in forms. Here, two check boxes are used, which can be checked independently:
 
 - The first one indicates that the terms of use have been read.
 - The second one indicates that the general terms and conditions of sale have been accepted.
+
+**Managing check boxes in the form (file src/components/MyForm.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const name = ref("");
+let dates = [];
+for (let year=2023; year > 1900; year--) dates.push(year);
+const birthdate = ref("");
+const maritalStatus = ref("");
+const acceptConditions = ref([]);
+</script>
+
+<template>
+<h3>Input Form</h3>
+Name: <input type="text" v-model="name" />
+<br/><br/>
+Date of Birth:
+  <select v-model="birthdate" >
+     <option v-for="date in dates" :value="date" :key="date">
+{{date}}</option>
+  </select>
+<br/><br/>
+Marital Status:
+   <input type="radio" value="M" id="maried"
+v-model="maritalStatus">
+   <label for="maried">Married</label>
+   <input type="radio" value="S" id="single"
+v-model="maritalStatus">
+   <label for="single">Single</label>
+   <input type="radio" value="D" id="divorced"
+v-model="maritalStatus">
+   <label for="divorced">Divorced</label>
+   <input type="radio" value="W" id="widower"
+v-model="maritalStatus">
+   <label for="widower">Widowed</label>
+<br/><br/>
+<input type="checkbox" id="read" value="read"
+            v-model="acceptConditions" />
+<label for="read">I have read the terms of use.</label>
+<br/><br/>
+<input type="checkbox" id="accept" value="accept"
+            v-model="acceptConditions" />
+<label for="accept">I accept the general terms and conditions
+of sale.</label>
+<br/><br/>
+<h3>Reactive Variables</h3>
+name: <b>{{name}}</b>
+<br/><br/>
+birthdate: <b>{{birthdate}}</b>
+<br/><br/>
+maritalStatus: <b>{{maritalStatus}}</b>
+<br/><br/>
+acceptConditions: <b>{{acceptConditions}}</b>
+<br/><br/>
+</template>
+
+<style scoped>
+h3 {
+    background-color: gainsboro;
+  padding: 5px;
+}
+</style>
+```
 
 The reactive variable `acceptConditions`, which can contain the values of two check boxes, is initialized as an empty array `[]`. Depending on which check box is checked, its value will automatically be added to the
 `acceptConditions` array.
@@ -603,7 +968,30 @@ A modifier is used after the name of the associated directive, prefixed with the
 
 Let’s use the `lazy` modifier with the `v-model` directive, taking the name input field from the previous example. The `MyForm` component is modified to accommodate the lazy modifier in the directive.
 
-Using the lazy modifier (file src/components/MyForm.vue)
+**Using the lazy modifier (file src/components/MyForm.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const name = ref("");
+</script>
+
+<template>
+<h3>Input Form</h3>
+Name: <input type="text" v-model.lazy="name" />
+<br/><br/>
+<h3>Reactive Variables</h3>
+name: <b>{{name}}</b>
+<br/><br/>
+</template>
+
+<style scoped>
+h3 {
+  background-color: gainsboro;
+  padding: 5px;
+}
+</style>
+```
 
 Let’s enter a name in the input field associated with `v-model`:
 
