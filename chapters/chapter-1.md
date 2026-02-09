@@ -1,5 +1,6 @@
-# Day 1: Mastering 
-# Components in Vue.js
+# Day 1: Mastering Components in Vue.js
+
+[[toc]]
 
 Welcome to Chapter 1 of our journey to master Vue.js in just six days. 
 During this first day, we will delve into the world of Vue.js, starting by 
@@ -92,16 +93,20 @@ direct manipulations, which can be time-consuming.
 Let’s now explore how the binding between the browser’s DOM and 
 Vue.js’s Virtual DOM works.
 
-# Step 1: Virtual DOM Operation
+### Step 1: Virtual DOM Operation
+
 Here’s how the Virtual DOM operates in Vue.js:
+
 1. **Virtual DOM Creation:** When a Vue.js component 
 is created, it generates an internal Virtual DOM 
 that reflects the current structure of the DOM. This 
 Virtual DOM is a virtual and lightweight copy of the 
 actual DOM tree.
+
 2. **Initial Rendering:** At startup, the component 
 generates the Virtual DOM using the data and 
 templates defined in the Vue.js code.
+
 3. **Change Detection:** When a component’s data 
 changes (due to user interaction, such as clicking 
 a button), Vue.js uses a process called “reactivity” 
@@ -119,6 +124,7 @@ the modifications to be made to the real DOM to
 reflect the changes. These instructions are created 
 efficiently, minimizing the number of direct DOM 
 manipulations.
+
 6. **DOM Update:** Finally, Vue.js applies the 
 reconciliation process to the real DOM in an 
 optimized manner. Only the parts of the DOM that 
@@ -135,7 +141,7 @@ crucial technique that optimizes browser performance by intelligently
 detecting changes and efficiently updating the DOM, enhancing reactivity 
 and the user experience.
 
-# Step 2: Concrete Example
+### Step 2: Concrete Example
 Here is a concrete example to illustrate how the Virtual DOM works in Vue.
 js through a simple case: incrementing a counter by clicking a button.
 
@@ -147,6 +153,8 @@ button). The MyCounter component is associated with a MyCounter.vue
 file described as follows:
 
 **File MyCounter.vue**
+
+<<< @/../snippets/components/MyCounter.vue
 
 This component is displayed in a browser as follows:
 
@@ -191,10 +199,12 @@ selectively update the real DOM. This provides a reactive user experience
 while optimizing performance.
 
 # Creating a First Vue.js Application
+
 Creating a Vue.js application requires installing the Vue CLI utility, 
 downloadable after installing the npm utility from the Node.js server.
 
-# Step 1: Installing Node.js and Vue CLI
+### Step 1: Installing Node.js and Vue CLI
+
 Ensure that you have Node.js installed on your system, which you can 
 download from the official Node.js website (https://nodejs.org/). Next, 
 install Vue CLI using the `npm install -g @vue/cli` command in your 
@@ -205,7 +215,7 @@ terminal:
 Once Vue CLI is installed, you can use the vue create command to 
 create the Vue.js application.
 
-# Step 2: Creating the Vue.js Application
+### Step 2: Creating the Vue.js Application
 After installing Vue CLI, you can create a new Vue.js project by running the 
 command vue create vueapp. This will create the vueapp application in 
 the newly created vueapp directory:
@@ -226,7 +236,7 @@ on the screen:
 
 Once the Vue.js application is created, the next step is to start it.
 
-# Step 3: Launching the Vue.js Application
+### Step 3: Launching the Vue.js Application
 
 To start the previously created Vue.js application, simply type the two 
 commands in the terminal window as indicated: cd vueapp, then npm 
@@ -243,8 +253,7 @@ following:
 application
 
 The terminal window indicates that the Vue.js application is accessible 
-at the URL http://localhost:8080.
-Let’s enter this URL in a browser:
+at the URL `http://localhost:8080`. Let’s enter this URL in a browser:
 
 **_Figure 1-9._** Default_ Vue.js application created_
 
@@ -263,8 +272,7 @@ We can see that the Vue.js application directory primarily contains
 configuration files and three main directories (node_modules, public, and 
 src). Let’s now explain their role and contents.
 
-# Step 1: Configuration Files (with .js and 
-# .json Extensions)
+### Step 1: Configuration Files (with .js and .json Extensions)
 
 The configuration files are directly attached to the root of the application. 
 They serve, among other things, to enable the execution of the Vue.js 
@@ -273,6 +281,8 @@ package.json file, which is traditionally used to configure an application
 to run on a Node.js server:
 
 **File package.json**
+
+<<< @/../package.json
 
 In this file, you’ll find the list of dependencies that our application 
 needs to run, along with their respective versions.
@@ -284,6 +294,15 @@ Additional scripts can be added. For example, let’s insert a new script
 
 **Adding the "start" script (package.json file)**
 
+```json
+"scripts": {
+    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve --port 3000", // [!code highlight]
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+},
+```
+
 The command npm run start starts the server on port 3000.
 
 **_Figure 1-11._** _Execution of the “start” script_
@@ -294,7 +313,7 @@ We briefly examined the configuration files of the Vue.js application.
 Let’s now look at the application directories, starting with the node_
 modules directory.
 
-# Step 2: node_modules Directory
+### Step 2: node_modules Directory
 The node_modules directory contains external dependencies necessary 
 for the proper functioning of the Vue.js application (those specified in the 
 package.json file), as well as other libraries and modules that may be 
@@ -304,7 +323,8 @@ application.
 
 **_Figure 1-12._** _Partial content of the node_modules directory_
 
-# Step 3: public Directory
+### Step 3: public Directory
+
 The public directory contains the static files of the application. This 
 public directory typically includes the following two files:
 - The `favicon.png` file, which specifies the application’s 
@@ -318,6 +338,28 @@ functioning of the Vue.js application.
 
 **File public/index.html**
 
+```html
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width,initial?scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+       <strong>We're sorry but <%= htmlWebpackPlugin.options.
+title %> doesn't work properly without JavaScript 
+enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div> // [!code highlight]
+    <!-- built files will be auto injected -->
+  </body>
+</html>
+```
+
 The `index.html` file contains a single `<div>` element, which has 
 been assigned the default identifier "app". This convention allows us to 
 insert the Vue.js components of our application into this `<div>` element, 
@@ -327,7 +369,7 @@ is achieved.
 Now let’s examine the content of the src directory, which will help us 
 understand the purpose of the previous `<div>` element.
 
-# Step 4: src Directory
+### Step 4: src Directory
 The src directory of the application is the most widely used and modified 
 when building our Vue.js applications. It contains the source code for our 
 Vue.js components as well as static files such as images or CSS style files.
@@ -338,11 +380,17 @@ It consists of the following files and directories:
 Let’s examine in detail each file and directory listed in the src
 directory. We’ll start with the main.js file.
 
-# Step 5: src/main.js
+### Step 5: src/main.js
 The main.js file is crucial for starting a Vue.js application. Let’s see its 
 content:
 
 **File src/main.js**
+
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+createApp(App).mount('#app')
+```
 
 Here’s an explanation of the previous code:
 
@@ -375,13 +423,40 @@ mounts this instance on an element with the id "app" in the DOM. This
 effectively initializes the Vue.js application and makes it ready to be 
 displayed and used in the browser.
 
-# Step 6: src/App.vue
+### Step 6: src/App.vue
 We explained previously that the App.vue file is associated with the App
 component, which will be displayed in the HTML page. The App component 
 describes the structure of our Vue.js application using the syntax provided 
 by the Vue.js framework. Here is the content of the App.vue file:
 
 **App component (src/App.vue file)**
+
+```vue
+<template>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <HelloWorld msg="Welcome to Your Vue.js App"/>
+</template>
+<script>
+import HelloWorld from './components/HelloWorld.vue'
+export default {
+  name: 'App',
+  components: {
+    HelloWorld
+  }
+}
+</script>
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+```
+
 
 The `App.vue` file is a Vue.js component that defines the structure 
 (`<template>` section), logic (`<script>` section), and style (`<style>` section) 
@@ -426,7 +501,8 @@ located in the components directory of the application. Let’s describe the
 contents of the components directory, specifically the HelloWorld.vue file 
 associated with the HelloWorld component.
 
-# Step 7: src/components Directory
+### Step 7: src/components Directory
+
 The `src/components` directory contains files describing the internal 
 components of our Vue.js application. Subdirectories can be added if a 
 more structured organization is desired.
@@ -434,6 +510,8 @@ Let’s examine the file currently present in this directory. It is the
 `HelloWorld.vue` file associated with the `HelloWorld` component.
 
 **HelloWorld component (src/components/HelloWorld.vue file)**
+
+<<< @/../snippets/components/HelloWorld.vue
 
 We find the three sections of a Vue.js component, as we discussed in 
 the previous section when describing the App component:
@@ -450,7 +528,7 @@ We will have the opportunity in the following pages to explain in
 detail the possible content of a Vue.js component. We already know that it 
 contains the three sections mentioned earlier.
 
-# Step 8: src/assets Directory
+### Step 8: src/assets Directory
 The `src/assets` directory is used to store static files of the application, 
 such as images or globally applied CSS files for the entire Vue.js 
 application. In our case, it contains only the logo.png file corresponding to 
@@ -462,8 +540,8 @@ application are mainly located in the src directory and its subdirectories.
 We will now explain how to design a Vue.js application by breaking it 
 down into different components according to what we want to achieve.
 
-# Decomposition of a Vue.js Application 
-into Components
+# Decomposition of a Vue.js Application into Components
+
 Breaking down an application into components, as Vue.js suggests, is a 
 common approach in software development. This methodology promotes 
 the creation of a modular structure that simplifies code maintenance, 
@@ -515,6 +593,7 @@ for a well-defined task, the debugging process is greatly facilitated, as each
 component can be addressed independently.
 
 # Naming Conventions for Vue.js Components
+
 A Vue.js component name is written in PascalCase, with an initial capital 
 letter for each word in the component’s name. To avoid assigning a 
 component name that might also be associated with an HTML element, 
@@ -523,6 +602,7 @@ words. HTML elements are all defined with a single word, such as `<img>`,
 `<p>`, `<span>`, etc. Therefore, if Vue.js component names are defined 
 with a minimum of two words, there is no risk of confusion with HTML 
 tag names.
+
 Thus, you can create the `MyCounter` component in Vue.js, but you 
 cannot create the Counter component because it consists of a single word, 
 while `MyCounter` consists of two words.
@@ -550,6 +630,16 @@ the application.
 
 **File src/components/MyCounter.vue**
 
+```vue
+<script>
+</script>
+<template>
+<h1> MyCounter Component </h1>
+</template>
+<style scoped>
+</style>
+```
+
 The `<script>` and `<style>` sections are not necessary but are present 
 as they may contain added instructions later. The `MyCounter` component 
 needs to be inserted into the `App` component to be displayed within it. 
@@ -566,6 +656,25 @@ js syntax one wishes to use:
 Using the Options API syntax, the App.vue file becomes the following:
 **Using the Options API syntax (file src/App.vue)**
 
+```vue
+<script>
+import MyCounter from './components/MyCounter.vue'
+export default {
+  components : {
+    MyCounter : MyCounter
+     // As the key and the value are identical, we can also 
+write more simply:
+    // MyCounter
+  }
+}
+</script>
+<template>
+  <MyCounter />
+</template>
+<style scoped>
+</style>
+```
+
 The `MyCounter.vue` file is imported into the `App` component using the 
 `import` statement in the `<script>` section of the component. Then, the 
 `MyCounter` component is displayed in the `<template>` section using the 
@@ -580,3 +689,197 @@ Let’s use the Composition API syntax to write the App component in
 the `App.vue` file:
 
 **Using the Composition API syntax (file src/App.vue)**
+
+```vue
+<script setup>
+import MyCounter from './components/MyCounter.vue'
+</script>
+<template>
+  <MyCounter />
+</template>
+<style scoped>
+</style>
+```
+
+Here, note the setup attribute added to the `<script>` element. This 
+attribute in the `<script>` tag allows importing the MyCounter.vue file 
+without having to explicitly declare the MyCounter component within the 
+App component. This is a convenience added in Vue.js version 3, known as 
+the Composition API syntax.
+Let’s verify that both versions of the App component work by displaying 
+the URL `http://localhost:8080`.
+
+**_Figure 1-17._** _MyCounter Component_
+
+Which syntax, Options API or Composition API, should we use to write 
+a Vue.js component? We will use the Composition API syntax here, as it is 
+newer and simpler to use for writing components.
+
+# Defining Styles in a Vue.js Component
+
+Let’s modify the style of the `<h1>` element in the `MyCounter` component. 
+To do this, simply add a CSS style in the `<style>` section of the `MyCounter`
+component.
+
+**Style of the `<h1>` element (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+</script>
+<template>
+<h1> MyCounter Component </h1>
+</template>
+<style scoped>
+h1 {
+  font-family:papyrus;
+  font-size:20px;
+}
+</style>
+```
+
+The `MyCounter` component now displays with a new font style.
+
+**_Figure 1-18._** _Component MyCounter with a new font style_
+
+# Let’s now explain the use of the scoped attribute in the `<style>` tag.
+
+Using the Scoped Attribute in the `<style>` Tag
+The scoped attribute in a `<style>` tag in Vue.js is used to restrict the scope 
+of CSS styles to a specific component. This means that styles defined 
+within a `<style scoped>` tag will only apply to elements within the current 
+Vue component and will not propagate to elements in other components.
+Here is an example to illustrate the difference between using scoped
+and not using it:
+
+**Without the scoped attribute (file src/components/MyCounter.vue)**
+
+```vue
+<template>
+  <div>
+    <p class="red-text">MyCounter Component</p>
+  </div>
+</template>
+<style>
+.red-text {
+  color: red;
+}
+</style>
+```
+
+In this example, the CSS class .red-text is defined in the global style 
+of the component. It could potentially impact other components if the 
+class is used elsewhere in the application.
+
+**With the scoped attribute (file src/components/MyCounter.vue)**
+
+```vue
+<template>
+  <div>
+    <p class="red-text">MyCounter Component</p>
+  </div>
+</template>
+<style scoped>
+.red-text {
+  color: red;
+}
+</style>
+```
+
+In this example, the `.red-text` class is defined within a `<style scoped>` tag, 
+indicating that it will only apply to elements within the current component. 
+The styles defined here will have no impact on other components.
+The scoped attribute is particularly useful for avoiding style conflicts 
+between components and maintaining style isolation. It facilitates the 
+creation of reusable components and simplifies style management in a 
+Vue.js application. Each component can define its styles without concern 
+for styles defined in other components, contributing to better code 
+organization and maintainability.
+
+# Using Vue.js DevTools
+Vue.js DevTools is a browser extension designed for debugging 
+applications built with Vue.js. Simply search for “Vue.js DevTools” on 
+Google to download it for our browser.
+For instance, here is the link for Firefox:
+
+**_Figure 1-19._** _Installation of the Vue DevTools extension on Firefox_
+
+Click the “Add to Firefox” button. Next, display the console by pressing 
+the F12 key on the keyboard. Then, select the Vue menu by clicking >>.
+
+**_Figure 1-20._** _Selection of the Vue DevTools extension_
+
+The console window refreshes, displaying the components used in the 
+application:
+
+**_Figure 1-21._** _Components of the application displayed in Vue DevTools_
+
+# Using Vue.js Reactivity with the ref( ) Method
+
+Reactivity is a crucial concept when developing applications with Vue.
+js. This concept allows for automatic updating of the HTML page display 
+when a so-called reactive variable is modified in the program.
+If a reactive variable is modified by the program, this modification 
+will be visible wherever the reactive variable is used in the component’s 
+display.
+
+This concept enables the separation of program variables and 
+where they are displayed, as Vue.js takes care of managing the display 
+modification.
+
+A reactive variable is defined within a component and is associated 
+with the component in which it is defined. We create a reactive variable 
+using the `ref()` method defined in Vue.js. Let’s demonstrate how to define 
+and modify a reactive variable with the `ref()` method. We will use a 
+component called `MyCounter`, which displays a reactive variable count that 
+increments when a button is clicked.
+
+In all the following examples, the `App` component, which incorporates 
+the `MyCounter` component, is as described here:
+
+**App component (file src/App.vue)**
+
+```vue
+<script setup>
+import MyCounter from './components/MyCounter.vue'
+</script>
+<template>
+  <MyCounter />
+</template>
+```
+
+We use the Composition API syntax to define and use a reactive 
+variable count that increments upon clicking a button labeled “count+1”. 
+The Composition API of Vue.js defines the `ref()` method, which we 
+will employ.
+
+The `MyCounter` component is written as follows:
+
+**MyCounter component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue";
+// Creating a reactive variable count with an initial 
+value of 0
+const count = ref(0);
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br /><br />
+<button @click="count++">count+1</button>
+</template>
+```
+
+The Composition API is used here within the `<script setup>` syntax. 
+The `ref()` method, defined in Vue.js, is usable because it is imported with 
+the statement `import { ref } from "vue"`. All Vue.js methods used in 
+our programs must be imported in this manner before they can be utilized. 
+A slight variation of this syntax is explained in the following section.
+
+The reactive variable count is created and initialized with the 
+statement `count = ref(value)`. Subsequently, the count variable can be 
+used in the `<template>` section, as mentioned earlier. Let’s display the URL 
+`http://localhost:8080` in the browser:
+
+**_Figure 1-22._** _Usage of a reactive variable “count”_
