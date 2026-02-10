@@ -163,7 +163,6 @@ This component is displayed in a browser as follows:
 Upon clicking the “Increment” button once, the counter value 
 increments from 0 to 1:
 
-**_Figure 1-2._** _Incrementing the counter from 0 to 1_
 
 Let’s examine how Vue.js’s Virtual DOM handles updates when 
 clicking the button to increment the counter:
@@ -210,7 +209,6 @@ download from the official Node.js website (https://nodejs.org/). Next,
 install Vue CLI using the `npm install -g @vue/cli` command in your 
 terminal:
 
-**_Figure 1-3._** _Vue CLI installation_
 
 Once Vue CLI is installed, you can use the vue create command to 
 create the Vue.js application.
@@ -220,19 +218,16 @@ After installing Vue CLI, you can create a new Vue.js project by running the
 command vue create vueapp. This will create the vueapp application in 
 the newly created vueapp directory:
 
-**_Figure 1-4._** _Creating the Vue.js application with Vue CLI_
 
 The system prompts for the desired version of Vue.js. We retain the 
 default selection of the current version 3 by pressing the Enter key on the 
 keyboard.
 The Vue.js application named vueapp begins to be created:
 
-**_Figure 1-5._** _Creating the Vue.js application in progress_
 
 Once the application creation process is complete, it will be displayed 
 on the screen:
 
-**_Figure 1-6._** _Completion of Vue.js application creation_
 
 Once the Vue.js application is created, the next step is to start it.
 
@@ -242,20 +237,13 @@ To start the previously created Vue.js application, simply type the two
 commands in the terminal window as indicated: cd vueapp, then npm 
 run serve.
 
-**_Figure 1-7._** _Launching the Vue.js application_
-
 The npm run serve command starts a Node.js server on which the 
 Vue.js application will run.
 Once the Node.js server is launched, the terminal screen becomes the 
 following:
 
-**_Figure 1-8._** _Completion of the server launch process with the Vue.js_ 
-application
-
 The terminal window indicates that the Vue.js application is accessible 
 at the URL `http://localhost:8080`. Let’s enter this URL in a browser:
-
-**_Figure 1-9._** Default_ Vue.js application created_
 
 We now have access to the previously created Vue.js application.
 
@@ -304,8 +292,6 @@ Additional scripts can be added. For example, let’s insert a new script
 ```
 
 The command npm run start starts the server on port 3000.
-
-**_Figure 1-11._** _Execution of the “start” script_
 
 The Vue.js application is now accessible at the URL http://
 localhost:3000, thanks to the server launched on port 3000.
@@ -709,8 +695,6 @@ the Composition API syntax.
 Let’s verify that both versions of the App component work by displaying 
 the URL `http://localhost:8080`.
 
-**_Figure 1-17._** _MyCounter Component_
-
 Which syntax, Options API or Composition API, should we use to write 
 a Vue.js component? We will use the Composition API syntax here, as it is 
 newer and simpler to use for writing components.
@@ -738,8 +722,6 @@ h1 {
 ```
 
 The `MyCounter` component now displays with a new font style.
-
-**_Figure 1-18._** _Component MyCounter with a new font style_
 
 # Let’s now explain the use of the scoped attribute in the `<style>` tag.
 
@@ -801,12 +783,8 @@ applications built with Vue.js. Simply search for “Vue.js DevTools” on
 Google to download it for our browser.
 For instance, here is the link for Firefox:
 
-**_Figure 1-19._** _Installation of the Vue DevTools extension on Firefox_
-
 Click the “Add to Firefox” button. Next, display the console by pressing 
 the F12 key on the keyboard. Then, select the Vue menu by clicking >>.
-
-**_Figure 1-20._** _Selection of the Vue DevTools extension_
 
 The console window refreshes, displaying the components used in the 
 application:
@@ -859,8 +837,7 @@ The `MyCounter` component is written as follows:
 ```vue
 <script setup>
 import { ref } from "vue";
-// Creating a reactive variable count with an initial 
-value of 0
+// Creating a reactive variable count with an initial value of 0
 const count = ref(0);
 </script>
 <template>
@@ -870,6 +847,18 @@ Reactive variable count: <b>{{ count }}</b>
 <button @click="count++">count+1</button>
 </template>
 ```
+
+<script setup>
+import { ref } from "vue";
+
+const count = ref(0);
+</script>
+
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br /><br />
+<button @click="count++">count+1</button>
+
 
 The Composition API is used here within the `<script setup>` syntax. 
 The `ref()` method, defined in Vue.js, is usable because it is imported with 
@@ -882,4 +871,586 @@ statement `count = ref(value)`. Subsequently, the count variable can be
 used in the `<template>` section, as mentioned earlier. Let’s display the URL 
 `http://localhost:8080` in the browser:
 
+<!-- <script setup>
+import { ref } from "vue";
+const count = ref(0);
+</script> -->
+
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br /><br />
+<button @click="count++">count+1</button>
+
 **_Figure 1-22._** _Usage of a reactive variable “count”_
+
+Let’s click multiple times the “count+1” button:
+
+The variable count is indeed reactive as it is modified with each click 
+on the “count+1” button.
+Notice that the incrementation of the count variable is performed 
+directly in the `<template>` section by writing the `<button>` element as 
+follows:
+
+**Incrementation of the reactive variable count (file src/components/MyCounter.vue)**
+
+`<button @click="count++">count+1</button>`
+
+The operation performed here is simple and corresponds to the 
+"count++" instruction. However, in more complex scenarios, it would 
+be more appropriate to use a function call to perform the corresponding 
+processing.
+
+# Importing Vue.js Methods into Our Programs
+
+The use of the `ref()` method requires writing the statement import `{ ref }` from "vue", where the curly braces contain the list of methods used in 
+the JavaScript code.
+
+Alternatively, one can perform a global import of all Vue.js methods 
+without having to enumerate them in the list. This can be achieved using 
+the statement `import * as vue from "vue"`. The variable name used 
+after the "as" keyword is arbitrary but must be used in the subsequent 
+JavaScript code. Let’s rewrite the previous program following this 
+principle:
+
+**Using import * as vue from “vue” (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import * as vue from "vue";
+// Creating a reactive variable count with an initial 
+value of 0
+const count = vue.ref(0);
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br /><br />
+<button @click="count++">count+1</button>
+</template>
+```
+
+We observe that the statement `ref(0)` needs to be prefixed with the 
+variable "vue", so it is written as `vue.ref(0)`. In this instance, we chose to 
+use the variable name "vue", but it can be any variable name.
+
+# Defining Methods in a Vue.js Component
+
+We’ve seen how to create reactive variables in the component using the 
+`ref(value)` method. It’s also possible to create methods in a component 
+that can be used in the `<template>` section of the component.
+
+Previously, we wrote the processing to be executed after clicking the 
+button directly in the value of the `@click` attribute. Instead of specifying 
+the count++ instruction, we can replace it with a method call, for example, 
+`increment()`. Thus, we would write `@click="increment()"` instead of 
+`@click="count++"`.
+
+Let’s explore how to define and use methods using the Composition 
+API syntax.
+
+**Definition of the increment() method (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue";
+// Creating a reactive variable count with an initial 
+value of 0
+const count = ref(0);
+function increment() {
+  count.value++;   // One accesses the value of count using 
+count.value
+}
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br /><br />
+<button @click="increment()">count+1</button>
+</template>
+```
+
+Functions are defined in the `<script setup>` section of the 
+component. Functions defined in this section will then be accessible in the 
+`<template>` section of the component.
+
+Accessing the reactive variable count defined by `count = ref(0)` is 
+done using the value property of the reactive variable count, namely, 
+count.value.
+
+Note that the variable count can be defined using the const keyword 
+because it remains constant (its value, representing a reference to an 
+object in memory, does not change). It is the value property of this object 
+that is modified.
+
+Let’s verify that everything works in the same manner:
+
+**_Figure 1-24._** _Usage of methods in a component_
+
+Note that the `increment()` function can also be defined using the ES6 
+syntax. Instead of:
+
+**Traditional definition of the increment() function**
+
+```
+function increment() {
+  count.value++;   // One accesses the value of count using 
+count.value
+}
+```
+
+one can also write the following:
+
+**Function increment() defined using ES6 syntax**
+
+```
+const increment = () => {
+  count.value++;
+};
+```
+
+Now that we know how to define methods in a component, let’s 
+explore how to define and use new reactive variables that depend on 
+those already created. These new reactive variables are called computed 
+properties.
+
+# Defining Computed Properties in a Vue. js Component
+
+Computed properties allow the creation of new reactive variables based on 
+those already defined. Since computed properties are also reactive, they 
+will be updated if any of the reactive variables they depend on is modified.
+The advantage of computed properties is that their result is calculated 
+only if one of the reactive variables associated with them is modified. 
+This saves processing time compared to calling a traditional method (as a 
+method performs its processing each time it is used).
+
+To illustrate this, let’s create a new reactive variable named 
+`doubleCount`, which is used to calculate double the value of the reactive 
+variable count. The variable `doubleCount` is a computed property 
+because it depends on one or more reactive variables. Its value will be 
+automatically updated whenever any of the reactive variables it depends 
+on is updated.
+
+To define and use a computed property with the Composition 
+API, we use the `computed(callback)` method defined in Vue.js. The 
+`callback()` function should return the value of the computed property. 
+The return value of the `computed()` method is associated with the 
+name of the computed property, in the form of const `doubleCount = computed(callback)` 
+to create the computed property `doubleCount`.
+
+**Creation of the computed property doubleCount (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed } from "vue";
+// Usage of ref() to create a reactive variable
+const count = ref(0);
+// Usage of computed() to create a computed variable
+const doubleCount = computed(function() {
+  return count.value * 2;
+});
+const increment = () => {
+  count.value++;
+};
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br />
+Computed variable doubleCount : <b>{{ doubleCount }}</b>
+<br /><br />
+<button @click="increment()">count+1</button>
+</template>
+```
+
+After several clicks on the “count+1” button:
+
+**_Figure 1-25._** _Creation of the computed property doubleCount_
+
+We have seen how to use the click on a button to increment the 
+reactive variable count. But suppose we want to increment the variable 
+automatically, every second, as soon as the component is displayed. We 
+will need to use a new concept, which is to use the lifecycle methods of a 
+Vue.js component.
+
+# Lifecycle in a Vue.js Component
+
+When a Vue.js component is created in memory, it follows an internal 
+lifecycle that corresponds to the different phases of its evolution:
+
+1. It is created in memory and then attached to the 
+DOM tree of the current HTML page.
+
+2. Next, it is possibly updated, if necessary (in the 
+Virtual DOM and then in the real DOM).
+
+3. Finally, it is possibly removed, if necessary (from the 
+Virtual DOM and the real DOM).
+
+Each of the preceding steps is associated with an internal method 
+in the Vue.js component. These internal methods are called lifecycle 
+methods, and it is possible to use them in each Vue.js component. You can 
+then write specific processing in each method.
+
+Here are the different lifecycle methods that can be used in a Vue.js 
+component. They all use a callback parameter, which is a function that 
+describes the processing to be performed when the lifecycle method is 
+triggered. These methods are executed by Vue.js in the order they are 
+written here:
+
+1. setup: The setup is not associated with a method 
+but corresponds to the code written in the `<script setup>`
+section. It is executed only once during the 
+creation of the component in memory.
+
+2. `onMounted(callback)`: This method is executed 
+only once when the component has been inserted 
+into the HTML page. The HTML elements 
+associated with the component are in the DOM.
+
+3. `onUpdated(callback)`: This method is executed 
+when the component has been updated (in memory 
+and in the DOM). It is executed with each update.
+
+4. `onUnmounted(callback)`: This method is executed 
+only once when the component is removed 
+from memory.
+
+The aforementioned methods allow processing after the insertion, 
+update, or destruction of the component. Other methods exist to perform 
+processing before it is realized. These are the following methods:
+
+1. `onBeforeMount(callback)`: This method is executed 
+only once before the component is inserted into the 
+HTML page.
+
+2. `onBeforeUpdate(callback)`: This method is 
+executed before the component is updated, with 
+each update.
+
+3. `onBeforeUnmount(callback)`: This method is 
+executed only once before the component is 
+removed.
+
+Let’s write these methods in the `MyCounter` component and use them 
+to display traces in the console.
+
+**Using lifecycle methods (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed, onBeforeMount, onMounted, 
+onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted } 
+from "vue";
+console.log("setup: The component is created in memory.");
+// Usage of ref() to create a reactive variable
+const count = ref(0);
+// Usage of computed() to create a computed variable
+const doubleCount = computed(function() {
+  return count.value * 2;
+});
+const increment = () => {
+  count.value++;
+};
+// Lifecycle Methods
+onBeforeMount(() => {
+   console.log("onBeforeMount: The component is about to be 
+mounted in the DOM.");
+});
+onMounted(() => {
+   console.log("onMounted: The component has been mounted in 
+the DOM.");
+});
+onBeforeUpdate(() => {
+   console.log("onBeforeUpdate: The component is about to be 
+updated.");
+});
+onUpdated(() => {
+   console.log("onUpdated: The component has been updated.");
+});
+onBeforeUnmount(() => {
+   console.log("onBeforeUnmount: The component is about to be 
+unmounted.");
+});
+onUnmounted(() => {
+   console.log("onUnmounted: The component has been 
+unmounted.");
+});
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br />
+Computed variable doubleCount : <b>{{ doubleCount }}</b>
+<br /><br />
+<button @click="increment()">count+1</button>
+</template>
+```
+
+Let’s run the previous program and observe the traces displayed in the 
+console:
+
+**_Figure 1-26._** _Lifecycle methods_
+
+We can see that the component is first created in memory and then 
+mounted in the DOM.
+
+Let’s click the “count+1” button. This will update the component by 
+incrementing the reactive variable count:
+
+**_Figure 1-27._** _Component updated_
+
+The `onBeforeUpdate()` and `onUpdated()` methods were executed 
+during the update of the reactive variable.
+
+If we click again the “count+1” button, these methods are 
+executed again:
+
+**_Figure 1-28._** _New update of the component_
+
+# Example of Using Lifecycle Methods in a Vue.js Component
+
+We’ve seen when the lifecycle methods are triggered.
+
+Let’s see how to use these lifecycle methods so that the MyCounter
+component displays a counter that increments every second (instead 
+of using the button click as before). To achieve this, we need to use a 
+timer with the `setInterval()` method of JavaScript. The timer will start 
+in one of the methods indicating the creation of the component (e.g., 
+the `onMounted()` method), and it will be stopped in one of the methods 
+indicating the removal of the component (e.g., the `onUnmounted()`
+method).
+
+We define two new methods in the `MyCounter` component, which are 
+the `start()` and `stop()` methods:
+
+1. The start() method starts the timer and will be 
+called in the onMounted() method.
+
+2. The stop() method stops the timer and will be 
+called in the onUnmounted() method.
+
+**Start the counter automatically (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from "vue";
+let timer;
+const count = ref(0);
+const doubleCount = computed(() => count.value * 2);
+const increment = () => {
+  count.value++;
+};
+const start = () => {
+  timer = setInterval(function() {
+    increment();
+    }, 1000);
+};
+const stop = () => {
+  clearInterval(timer);
+};
+onMounted(() => {
+  start();
+});
+onUnmounted(() => {
+  stop();
+});
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <b>{{ count }}</b>
+<br />
+Computed variable doubleCount : <b>{{ doubleCount }}</b>
+</template>
+```
+
+Since the counter is started automatically, the “count+1” button has 
+been removed from the component. The `start()` method is called in the 
+`onMounted()` method but could have been called directly from the `<script setup>` 
+section. Let’s verify that the counter is now automatically started 
+without having to click the button:
+
+**_Figure 1-29._** _Automatic start of the counter_
+
+The counter is now automatically started when the component is 
+displayed.
+
+# Managing Reactivity Ourselves with the customRef( ) Method
+
+In everything we have previously explained, we have seen that whenever 
+a reactive variable is updated, its new value is automatically reflected in 
+the component where it is displayed. This operation is due to the internal 
+functioning of reactivity in Vue.js, which performs it for us. Most of the 
+time, this is the desired behavior.
+
+However, it is possible to create our own reactivity. This would allow 
+us to perform processing before a reactive variable is displayed or before a 
+reactive variable is modified.
+
+Here are some examples of using this mechanism:
+
+- **Date Formatting:** Before displaying a date, we format it 
+according to the format of the country using it. The date 
+would be stored internally in the YYYYMMDD format 
+but would be displayed, for example, in the DD/MM/
+YYYY format for better display comfort or according to 
+the MM-DD-YYYY format.
+
+- **Email Validation:** Once the email is entered, we check 
+that it is in the correct format before storing it.
+
+- **Processing During Field Entry:** Instead of performing 
+processing for each character entered, we wait for a 
+minimum number of characters to be entered before 
+performing it. This prevents making requests to a 
+server too quickly.
+
+- **Checking the Format of a Password:** It is sometimes 
+useful to check that the chosen password has 
+characteristics such as at least ten characters, at least 
+one digit, at least one uppercase letter, at least one 
+lowercase letter, etc.
+
+This operation is possible, thanks to the `customRef()` method, which 
+allows creating reactive variables with a specific behavior. Let’s now 
+examine how the `customRef()` method works to define new reactive 
+variables.
+
+## Step 1: Operation and Use of customRef()
+
+A reactive variable defined with `customRef()` works in the same way as 
+one defined with `ref()`. Thus, the value property of the variable allows 
+accessing it in both reading and writing.
+
+However, we define ourselves what the reading of the variable should 
+return and also what the variable should finally contain when its value is 
+initialized or modified. This is the advantage of using this type of reactive 
+variables defined by `customRef()` rather than `ref()`, as we can modify 
+the result of reading and/or the result of writing the variable, and this in a 
+centralized manner (in the `customRef()` method).
+
+The difference with the `ref()` method is that reading a variable 
+defined with `ref()` returns the exact value of the content of the variable, 
+and its writing writes exactly into the variable what is indicated in the value 
+attribute.
+
+The questions to ask when creating a variable with `customRef()` are as 
+follows:
+
+- What do we want to get back when reading the 
+variable?
+
+- What do we want to get in the content of the variable 
+when it is modified?
+
+If the answer to these two questions is to keep the current value, just 
+use the `ref()` method to create the reactive variable. The `customRef()`
+method would not add anything more in this case.
+
+The `customRef(callback)` method uses the `callback(track, trigger)` 
+function, which allows returning an object with the properties `{ get, set }`,
+ which are functions defining the reading of the variable (with 
+the `get()` function) and the modification of the variable (with the `set()`
+function).
+
+- The `get()` function must return the value we want to 
+read when accessing the variable (in reading).
+
+- The `set(newValue)` function must set the new value 
+of the variable (in writing). The newValue parameter is 
+the value we want to write, but it can be modified in the 
+`set()` method.
+
+The `track()` and `trigger()` parameters of the callback function are 
+functions to call when you want to trigger reading (`by track()`) or update 
+(`by trigger()`).
+
+To understand these explanations, the simplest way is to write a 
+minimal program that does this work. The traces written in the program 
+will help understand how it works.
+
+We create a count variable defined by `customRef()`, which increments 
+by 1 with each click on a “count+1” button.
+
+**Incrementing a count variable defined by customRef() (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { customRef } from 'vue';
+// Create a custom reference (customRef)
+const count = customRef((track, trigger) => {
+   let value = 0;  // value will be the variable being tracked, 
+initialized here to 0.
+  return {
+    get() {
+      // Track the dependency when the value is read.
+      track();
+      console.log("get value =", value);
+      return value;
+    },
+    set(newValue) {
+      // Update the value and trigger reactivity.
+      value = newValue;
+      trigger();
+      console.log("set value =", value);
+    }
+  };
+});
+function increment() {
+  console.log("before increment value");
+  count.value += 1;  // Increment the value of the variable.
+  console.log("after increment value");
+}
+
+</script>
+<template>
+<h3> MyCounter Component </H3>
+Reactive variable count: <b>{{ count }}</b>
+<br><br>
+<button @click="increment">count + 1</button>
+</template>
+```
+
+The count variable is created when calling the `customRef(callback)`
+method. Once the count variable is created, it can be used by writing 
+instructions like count.value += 1, which here increments the value 
+by 1. The usage principle is the same as if the variable had been created 
+by `ref()`.
+
+The callback function used in `customRef(callback)` has the form 
+`callback(track, trigger)`, where `track()` will be used in the `get()`
+method and `trigger()` in the `set()` method.
+
+The callback function starts by creating a variable (here value) that will 
+be the internally manipulated variable and corresponds to the value of the 
+count variable. The variable is initialized to 0 here.
+
+The callback function then returns an object `{ get, set }` that 
+defines the `get()` and `set()` methods:
+
+- The `get()` method calls the `track()` method, 
+indicating that we want to track the variable mentioned 
+next, and its value is returned by `get()`.
+
+- Here, we want to return the exact value of the variable 
+that will be used when reading the count variable, but 
+we could return something else.
+
+- The `set(newValue)` method calls the `trigger()`
+method to indicate that we are going to modify the 
+variable’s value, and this new value must be taken into 
+account. Here, we assign the newValue to value, but we 
+could assign another value
+
+The implemented functionality here corresponds to the functionality 
+used with the `ref()` method. However, it allows, with the traces 
+performed in the methods, to see the internal functioning provided by the 
+`customRef()` method.
+
+Let’s execute the previous program, displaying the traces in the console 
+(F12 key):
+
+
+
+
+
+
