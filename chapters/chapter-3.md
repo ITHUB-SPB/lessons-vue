@@ -34,15 +34,60 @@ to increment a reactive variable would be as follows:
 
 The file for the `MyCounter` component is as follows:
 
+```vue
+<script setup>
+import { ref } from "vue"
+const count = ref(0);
+const increment = () => {
+  count.value++;
+}
+</script>
+
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button v-on:click="increment()">count+1</button>
+</template>
+```
+
+<script setup>
+import { ref, defineProps } from "vue"
+import MyCounter from "../snippets/components/MyCounter.vue"
+import MyCounters from "../snippets/components/MyCounters.vue"
+
+const count = ref(0);
+const increment = () => {
+  count.value++;
+}
+
+const verifyKey = () => {
+   const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const moves = ["Backspace", "ArrowLeft", "ArrowRight",  "Delete", "Tab", "Home", "End"];
+  let authorized = [...numbers, ...moves];
+  if (!authorized.includes(event.key)) event.preventDefault();
+}
+
+const props = defineProps(["nb"]); 
+const nb = props.nb || 1;
+
+</script>
+
+<h3>MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button v-on:click="increment()">count+1</button>
+
 **MyCounter Component (file src/components/MyCounter.vue)**
 
 After several clicks on the button, the reactive variable count has been
 incremented:
 
+
+
 **Figure 3-1.** *Handling click on the button*
 
-### Writing in the Form “increment(  )” or
-### "increment"?
+### Writing in the Form “increment(  )” or "increment"?
 
 When writing the event handling function, you can use either
 `@click="increment()"` or simply `@click="increment"`.
@@ -52,6 +97,27 @@ parameters, such as the increment value. You would then write
 function with a parameter would look like this:
 
 **MyCounter Component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const count = ref(0);
+const increment = (value) => {
+  count.value += value;
+}
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button v-on:click="increment(2)">count+1</button>
+</template>
+```
+
+<h3>MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button v-on:click="increment(2)">count+1</button>
 
 Each click increments the counter by 2 instead of 1.
 
@@ -82,6 +148,37 @@ preventing the filtering of allowed keys if used here.
 Therefore, we write the `MyCounter` component as follows:
 
 **Filtering keyboard keys (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const count = ref();
+const verifyKey = () => {
+   const numbers = ["0", "1", "2", "3", "4", "5", "6", "7",
+"8", "9"];
+  const moves = ["Backspace", "ArrowLeft", "ArrowRight",
+                 "Delete", "Tab", "Home", "End"];
+  let authorized;   // Allowed keys in the input field
+                   authorized = [...numbers, ...moves];
+  // If the key is not allowed, do not take it into account.
+  // The event object is available here.
+  if (!authorized.includes(event.key)) event.preventDefault();
+}
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text"
+@keydown="verifyKey()" v-model="count" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
+</template>
+```
+
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text"
+@keydown="verifyKey()" v-model="count" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
 
 The event-handling function `verifyKey()` uses the event object to
 determine the pressed key. The key property of the event object retrieves
@@ -120,6 +217,51 @@ initialized to “”.
 **Do not exceed the value 100 in the input field (file src/components/**
 **MyCounter.vue)**
 
+```vue
+<script setup>
+import { ref } from "vue"
+const count = ref();
+const message = ref("");
+const verifyKey = () => {
+   const numbers = ["0", "1", "2", "3", "4", "5", "6", "7",
+"8", "9"];
+  const moves = ["Backspace", "ArrowLeft", "ArrowRight",
+                 "Delete", "Tab", "Home", "End"];
+  let authorized;  // Allowed keys in the input field
+  authorized = [...numbers, ...moves];
+  // If the key is not allowed, do not take it into account.
+  // The event object is available here.
+  if (!authorized.includes(event.key)) event.preventDefault();
+}
+const verifyMax100 = () => {
+  message.value = "";
+  // The event object is available here.
+   if (parseInt(event.target.value) > 100) message.value = "Do
+not exceed 100!";
+}
+
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text" v-model="count"
+    @keydown="verifyKey()"
+    @input="verifyMax100()" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
+<br/><br/>
+Message : <b>{{message}}</b>
+</template>
+```
+
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text" v-model="count"
+    @keydown="verifyKey()"
+    @input="verifyMax100()" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
+<br/><br/>
+Message : <b>{{message}}</b>
+
 During the input event, the value entered in the input field is available
 in the variable `event.target.value`. If this value is greater than 100, the
 reactive variable `message` is initialized with the text of the error message to
@@ -135,6 +277,56 @@ Now, we want the field to be cleared upon clicking it so that a new value
 can be entered directly.
 To achieve this, we need to handle the focus event on the input field.
 **Clear the field content on focus (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref } from "vue"
+const count = ref();
+const message = ref("");
+const verifyKey = () => {
+   const numbers = ["0", "1", "2", "3", "4", "5", "6", "7",
+"8", "9"];
+  const moves = ["Backspace", "ArrowLeft", "ArrowRight",
+                 "Delete", "Tab", "Home", "End"];
+  let authorized;  // Allowed keys in the input field
+  authorized = [...numbers, ...moves];
+  // If the key is not allowed, do not take it into account.
+  // The event object is available here.
+  if (!authorized.includes(event.key)) event.preventDefault();
+}
+const verifyMax100 = () => {
+  message.value = "";
+  // The event object is available here.
+    if (parseInt(event.target.value) > 100) message.value = "Do
+not exceed 100!";
+}
+const eraseField = () => {
+  event.target.value = "";
+  count.value = "";
+  message.value = "";
+}
+</script>
+<template>
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text" v-model="count"
+    @keydown="verifyKey()"
+    @input="verifyMax100()"
+    @focus="eraseField()" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
+<br/><br/>
+Message : <b>{{message}}</b>
+</template>
+```
+<h3>MyCounter Component</h3>
+Reactive variable count: <input type="text" v-model="count"
+    @keydown="verifyKey()"
+    @input="verifyMax100()"
+    @focus="eraseField()" />
+<br/><br/>
+Entered value: <b>{{count}}</b>
+<br/><br/>
+Message : <b>{{message}}</b>
 
 The field is now cleared upon clicking it:
 
@@ -159,6 +351,17 @@ We have already used this type of communication, for example, with
 the `MyCounters` component in the form `<MyCounters :nb="3" />`.
 **App Component (file src/App.vue)**
 
+```vue
+<script setup>
+import MyCounters from "./components/MyCounters.vue"
+</script>
+<template>
+<MyCounters :nb="3" />
+</template>
+```
+
+<MyCounters :nb="3" />
+
 The App component (parent of the `MyCounters` component) here
 transmits the desired number of counters when displaying it.
 Notice the use of `:nb` instead of just nb. Without the colon, the string
@@ -169,12 +372,52 @@ it using a `v-for` directive.
 
 **MyCounters Component (file src/components/MyCounters.vue)**
 
+```vue
+<script setup>
+import MyCounter from "./MyCounter.vue";
+import { defineProps } from "vue";
+const props = defineProps(["nb"]);
+const nb = props.nb || 1;    // If the nb attribute is not
+specified, it defaults to 1.
+</script>
+<template>
+<MyCounter v-for="i in nb" :key="i" :index="i"/>
+</template>
+```
+
+<MyCounter v-for="i in nb" :key="i" :index="i"/>
+
 If you transmit `nb`="3" instead of `:nb`="3" in the App component,
 you need to write the `v-for` directive as `v-for="i in parseInt(nb)"` to
 retrieve the value of the nb attribute as an integer.
 The MyCounter component increments a reactive variable count upon
 clicking the “count+1” button.
 **MyCounter Component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, defineProps } from "vue"
+const count = ref(0);
+const props = defineProps(["index"]);
+const index = props.index || 1;
+const increment = () => {
+  count.value++;
+}
+</script>
+<template>
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button @click="increment()">count+1</button>
+<br/>
+</template>
+```
+
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<button @click="increment()">count+1</button>
+<br/>
 
 In Figure 3-6, you can see the display of the three counters.
 
@@ -194,6 +437,28 @@ First, let’s see how the `MyCounters` parent component can receive and
 handle an event indicating that its overall total should be incremented.
 **MyCounters Component (file src/components/MyCounters.vue)**
 
+```vue
+<script setup>
+import MyCounter from "./MyCounter.vue";
+import { ref, defineProps } from "vue";
+const props = defineProps(["nb"]);
+const nb = props.nb || 1;
+const total = ref(0);
+const increment = (value) => {
+  total.value += value;
+}
+</script>
+<template>
+<MyCounter v-for="i in nb" :key="i" :index="i" @
+incr="increment"/>
+<br/><hr/><br/>
+Overall Total : <b>{{total}}</b>
+</template>
+```
+<MyCounter v-for="i in nb" :key="i" :index="i" @incr="increment"/>
+<br/><hr/><br/>
+Overall Total : <b>{{total}}</b>
+
 We added a reactive variable called total in the `MyCounters`
 component, which will be incremented upon receiving the incr event.
 Note the syntax `@incr`="increment" instead of @incr="increment()".
@@ -203,6 +468,43 @@ value parameter, which represents the increment value. Now, let’s see how
 the child component `MyCounter` can transmit a value when triggering an
 event (in this case, the incr event) to the parent component.
 **MyCounter Component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, defineProps, defineEmits } from "vue"
+const count = ref(0);
+const props = defineProps(["index"]);
+const index = props.index || 1;
+// We define the "incr" event to be used towards the parent
+const emit = defineEmits(["incr"]);
+const increment = () => {
+  count.value++;
+ emit("incr", 1);   // Sending the "incr" event with the value 1
+}
+</script>
+<template>
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+<script setup>
+import { ref, defineProps, defineEmits } from "vue"
+const count = ref(0);
+const props = defineProps(["index"]);
+const index = props.index || 1;
+// We define the "incr" event to be used towards the parent
+const emit = defineEmits(["incr"]);
+const increment = () => {
+  count.value++;
+ emit("incr", 1);   // Sending the "incr" event with the value 1
+}
+</script>
+<template>
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
+<br/><br/>
+```
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count : <b>{{count}}</b>
 
 The `defineEmits()` method allows us to define one or more events
 that can be used in the component. The events are described as strings in
@@ -215,8 +517,7 @@ Let’s verify that the total is updated correctly by clicking on each button:
 
 **Figure 3-7.** *Displaying the total of counters*
 
-### Using provide(  ) and inject(  )
-### for Communication Between Components
+### Using provide(  ) and inject(  ) for Communication Between Components
 The mechanism we studied earlier, using events to communicate with the
 parent or props to communicate with children, is the basic mechanism
 offered by Vue.js. However, sometimes a different approach is desired,
@@ -253,6 +554,25 @@ components in the descendant tree.
 The App component can be written as follows:
 **App Component (src/App.vue file)**
 
+```vue
+<script setup>
+import MyCounters from "./components/MyCounters.vue"
+import { ref, provide } from "vue";
+const total = ref(0);
+// The total variable is made available for the descendants
+under the name "total"
+provide("total", total);
+</script>
+<template>
+<MyCounters :nb="3" />
+<br/><hr/><br/>
+Overall Total: <b>{{total}}</b>
+</template>
+```
+<MyCounters :nb="3" />
+<br/><hr/><br/>
+Overall Total: <b>{{total}}</b>
+
 The "total" functionality made available can now be used in the
 descendants’ components of the App component, including the MyCounter
 component. `The inject()` method is used to retrieve these functionalities
@@ -267,12 +587,53 @@ just displaying the requested `MyCounter` components.
 
 **MyCounters Component (file src/components/MyCounters.vue)**
 
+```vue
+<script setup>
+import MyCounter from "./MyCounter.vue";
+import { defineProps } from "vue";
+const props = defineProps(["nb"]);
+const nb = props.nb || 1;
+</script>
+<template>
+<MyCounter v-for="i in nb" :key="i" :index="i" />
+</template>
+```
+<MyCounter v-for="i in nb" :key="i" :index="i" />
+
 The `MyCounter` component is modified to use the "total" functionality
 provided by the App component. The "total" functionality is a reactive
 variable made available in the App component to be updated in the
 `MyCounter` component.
 
 **MyCounter Component (file src/components/MyCounter.vue)**
+
+```vue
+<script setup>
+import { ref, defineProps, inject } from "vue"
+const count = ref(0);
+const props = defineProps(["index"]);
+const index = props.index || 1;
+// Access to the "total" functionality (which is a reactive
+variable)
+const total = inject("total");
+const increment = () => {
+  count.value++;
+  total.value++;
+}
+</script>
+<template>
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count: <b>{{count}}</b>
+<br/><br/>
+<button @click="increment()">count+1</button>
+<br/>
+</template>
+```
+<h3>{{index}} - MyCounter Component</h3>
+Reactive variable count: <b>{{count}}</b>
+<br/><br/>
+<button @click="increment()">count+1</button>
+<br/>
 
 Let’s verify that it works:
 
